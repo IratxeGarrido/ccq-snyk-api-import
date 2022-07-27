@@ -154,7 +154,7 @@ export async function createOrgs(
   const createdOrgs: NewOrExistingOrg[] = [];
   const allExistingOrgs: Org[] = [];
   const requestManager = new requestsManager({
-    userAgentPrefix: 'snyk-api-import',
+   // userAgentPrefix: 'snyk-api-import',
   });
 
   for (const groupId in orgsPerGroup) {
@@ -234,7 +234,7 @@ async function separateExistingOrganizations(
   groupId: string,
   orgsPerGroup: CreateOrgData[],
 ): Promise<{ existingOrgs: Org[]; newOrgs: CreateOrgData[] }> {
-  try {
+  try {    
     return await filterOutExistingOrgs(requestManager, orgsPerGroup, groupId);
   } catch (e) {
     for (const org of orgsPerGroup) {

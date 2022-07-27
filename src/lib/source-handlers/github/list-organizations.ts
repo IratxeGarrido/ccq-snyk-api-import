@@ -18,11 +18,12 @@ async function fetchOrgsForPage(
   hasNextPage: boolean;
   since?: number;
 }> {
-  const orgsData: GithubOrgData[] = [];
+  let orgsData: GithubOrgData[] = [];
   const params = {
     per_page: 100,
     page: pageNumber,
     since,
+    org: "spring-media"
   };
 
   const res = isGithubEnterprise
@@ -38,6 +39,20 @@ async function fetchOrgsForPage(
         url: org.url,
       })),
     );
+  }
+
+  // Since we actually just want the teams, we can ignore the data previously in orgsData. 
+  // We might want to modify the script to iterate through the orgs and fetch the teams.
+  // add a flag to handle this case
+  const teamsRes = await octokit.teams.list(params);
+  const teams = teamsRes && teamsRes.data;
+  if (teams.length) {
+    //orgsData = teams.filter((team) => team.slug.includes("1up_ad")).map(team => ({
+    orgsData = teams.map(team => ({
+      name: team.slug,
+      id: team.id,
+      url: team.url
+    }))
   }
   return {
     orgs: orgsData,
@@ -86,7 +101,7 @@ export async function githubEnterpriseOrganizations(
   sourceUrl?: string,
 ): Promise<SnykOrgData[]> {
   if (!sourceUrl) {
-   console.warn(
+    console.warn(
       'No `sourceUrl` provided for Github Enterprise source, defaulting to https://api.github.com',
     );
   }

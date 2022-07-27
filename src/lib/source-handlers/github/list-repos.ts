@@ -9,6 +9,7 @@ const debug = debugLib('snyk:list-repos-script');
 export async function fetchReposForPage(
   octokit: Octokit,
   orgName: string,
+  orgInfo?: any,
   pageNumber = 1,
   perPage = 100,
 ): Promise<{
@@ -16,12 +17,21 @@ export async function fetchReposForPage(
   hasNextPage: boolean;
 }> {
   const repoData: GithubRepoData[] = [];
-  const params = {
+  let res;
+  if (orgInfo) {const params = {
+    per_page: perPage,
+    page: pageNumber,
+    org: orgInfo.name,
+    team_slug: orgName,
+  };
+    res = await octokit.teams.listReposInOrg(params);
+  } else {const params = {
     per_page: perPage,
     page: pageNumber,
     org: orgName,
   };
-  const res = await octokit.repos.listForOrg(params);
+    res = await octokit.repos.listForOrg(params);
+  }
   const repos = res && res.data;
   let hasNextPage;
   if (repos.length) {
@@ -45,7 +55,8 @@ export async function fetchReposForPage(
 async function fetchAllRepos(
   octokit: Octokit,
   orgName: string,
-  page = 1,
+  orgInfo?: any,
+  page = 1
 ): Promise<GithubRepoData[]> {
   const repoData: GithubRepoData[] = [];
   const MAX_RETRIES = 3;
@@ -59,7 +70,8 @@ async function fetchAllRepos(
       const { repos, hasNextPage } = await fetchReposForPage(
         octokit,
         orgName,
-        currentPage,
+        orgInfo,
+        currentPage
       );
       retries = 0;
       currentPage = currentPage + 1;
@@ -83,12 +95,14 @@ async function fetchAllRepos(
 export async function listGithubRepos(
   orgName: string,
   host?: string,
+  org?: any
 ): Promise<GithubRepoData[]> {
   const githubToken = getGithubToken();
   const baseUrl = getGithubBaseUrl(host);
+
   const octokit: Octokit = new Octokit({ baseUrl, auth: githubToken });
   debug(`Fetching all repos data for org: ${orgName}`);
-  const repos = await fetchAllRepos(octokit, orgName);
+  const repos = await fetchAllRepos(octokit, orgName, org);
 
   return repos;
 }

@@ -1,0 +1,372 @@
+{
+    "orgs": [
+        {
+            "name": "1up-admins",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "1up_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ac-infrastructure",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "adsolutions",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "adsolutions_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "advertising-intelligence",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "advertising-intelligence_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "apps",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "apps-appsfactory",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "apps-sprylab",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "apps_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "aubi-cobi",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "aubicobi_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "bi-evolution",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "bi-evolution_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "business-integration",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ccq",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ccq_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ccq_teamexternal",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "content-commerce",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "content-intelligence",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "content-intelligence_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "data-analytics",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "data-science-exchange",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "des",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "des_admin",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ep",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ep-admin",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ep_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "featuretests",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ideas-engineering",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "immersive-media",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "interactive",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "la",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "la-admins",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "la-archive",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "la_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "lean",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "leanbackend",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "lean_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "maps",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "maps_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "maps_teamextern",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "mds",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "mds_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "media-sites",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "media-sites-maintainer",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "media-sites_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "mobile-natives",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "musiktitel",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "natives-admins",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "natives-android",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "natives-backend",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "natives-frontend",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "natives-ios",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ott",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ott-flux-cd-admins",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ott_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "premium",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "privacywatch",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "privacywatch_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "privacywatch_teamextern",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "programming-languages",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ps",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ps-admins",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ps-extern",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ps-external-read",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "ps_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "python",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "r-enthusiasts",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "rabbit",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "rabbit-admins",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "red",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "red-maintainer",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "red-themis-admins",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "red-consumption",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "red-overview",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "red_ad",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "regiostar",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "robotron",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "robotron-admin",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "serverless",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "service",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "skillshub",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "team-q",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "testteam",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "typescript",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "user-experience",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "video",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "video-support",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "welt",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        },
+        {
+            "name": "xw_oncall",
+            "groupId": "fd738213-5121-4e93-921c-15fac786bdc4"
+        }
+    ]
+}

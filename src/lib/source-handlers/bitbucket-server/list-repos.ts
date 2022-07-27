@@ -87,6 +87,7 @@ const getRepos = async (
 export async function listBitbucketServerRepos(
   projectName: string,
   host: string,
+  org?: any
 ): Promise<BitbucketServerRepoData[]> {
   const bitbucketServerToken = getBitbucketServerToken();
   if (!host) {

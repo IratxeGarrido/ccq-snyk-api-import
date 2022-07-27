@@ -49,8 +49,8 @@ async function getRepos(
   >(
     'get',
     `${url}/${orgName}/` +
-      encodeURIComponent(project) +
-      '/_apis/git/repositories?api-version=4.1',
+    encodeURIComponent(project) +
+    '/_apis/git/repositories?api-version=4.1',
     headers,
     limiter,
     60000,
@@ -79,6 +79,7 @@ async function getRepos(
 export async function listAzureRepos(
   orgName: string,
   host?: string,
+  org?: any
 ): Promise<AzureRepoData[]> {
   const azureToken = getAzureToken();
   const baseUrl = getBaseUrl(host);

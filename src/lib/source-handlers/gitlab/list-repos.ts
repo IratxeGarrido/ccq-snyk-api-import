@@ -82,6 +82,7 @@ async function fetchAllRepos(
 export async function listGitlabRepos(
   groupName: string,
   host?: string,
+  org?: any
 ): Promise<GitlabRepoData[]> {
   const token = getToken();
   const baseUrl = getBaseUrl(host);

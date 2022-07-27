@@ -25,6 +25,7 @@ const debug = debugLib('snyk:generate-targets-data');
 async function githubEnterpriseRepos(
   orgName: string,
   sourceUrl?: string,
+  org?: any
 ): Promise<GithubRepoData[]> {
   if (!sourceUrl) {
     console.warn(
@@ -71,9 +72,9 @@ function validateRequiredOrgData(
   ) {
     throw new Error(
       'At least one supported integration is expected in `integrations` field.' +
-        `Supported integrations are: ${Object.values(
-          SupportedIntegrationTypesImportData,
-        ).join(',')}`,
+      `Supported integrations are: ${Object.values(
+        SupportedIntegrationTypesImportData,
+      ).join(',')}`,
     );
   }
 }
@@ -94,7 +95,7 @@ export async function generateTargetsImportDataFile(
       validateRequiredOrgData(name, integrations, orgId);
       const entities: Array<
         GithubRepoData | GitlabRepoData | AzureRepoData | BitbucketServerRepoData | BitbucketCloudRepoData
-      > = await sourceGenerators[source](topLevelEntity.name, sourceUrl!);
+      > = await sourceGenerators[source](topLevelEntity.name, sourceUrl!, topLevelEntity.org);
       entities.forEach((entity) => {
         targetsData.push({
           target: entity,

@@ -12,6 +12,9 @@ export interface CreatedOrg {
   integrations: {
     [name: string]: string;
   };
+  org?: {
+    name: string;
+  }
   orgId: string;
   groupId: string;
   origName: string; // name requested to be created

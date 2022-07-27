@@ -74,6 +74,8 @@ export async function listOrgs(
   }
   const query = qs.stringify(params);
 
+  console.log("Request Manager", requestManager);
+  
   const res = await requestManager.request({
     verb: 'get',
     url: `/group/${groupId}/orgs?query=${query}`,
@@ -113,7 +115,10 @@ export async function listOrgsPerPage(
     perPage,
     page: pageNumber,
   };
+  console.log("List Orgs", groupId);
   const orgs = await listOrgs(requestManager, groupId, params);
+  console.log(orgs);
+  
   let hasNextPage;
   if (orgs.length) {
     hasNextPage = true;
