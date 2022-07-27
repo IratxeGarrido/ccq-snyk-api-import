@@ -12,6 +12,7 @@ export interface CreatedOrg {
   integrations: {
     [name: string]: string;
   };
+  parentOrganization?: string;
   orgId: string;
   groupId: string;
   origName: string; // name requested to be created
@@ -39,6 +40,7 @@ export interface FilePath {
 export interface CreateOrgData {
   groupId: string;
   name: string;
+  parentOrganization?: string;
   sourceOrgId?: string;
 }
 
@@ -103,6 +105,7 @@ export enum SupportedIntegrationTypesToListSnykTargets {
   AZURE_REPOS = 'azure-repos',
   BITBUCKET_SERVER = 'bitbucket-server',
 }
+
 interface ImportingUser {
   id: string;
   name: string;
@@ -117,12 +120,12 @@ export interface CommandResult {
 }
 
 export interface SnykProject {
-  name: string; 
-  id: string; 
-  created: string; 
-  origin: string; 
-  type: string; 
-  branch: string | null;  
+  name: string;
+  id: string;
+  created: string;
+  origin: string;
+  type: string;
+  branch: string | null;
 }
 
 
@@ -142,7 +145,7 @@ export interface v3ProjectData {
   attributes: v3ProjectsAttributes;
   id: string;
   relationships: v3ProjectsRelationships;
-  type: string
+  type: string;
 }
 
 export interface v3ProjectsAttributes {
@@ -169,7 +172,15 @@ export interface v3ProjectsRelashionshipData {
   data: {
     id: string;
     type: string;
-  }
+  };
   links: unknown;
   meta: unknown;
+}
+
+export type SourceGeneratorOptions = { sourceUrl?: string, fromTeams?: boolean }
+
+export type SourceRepoOptions = {
+  orgName: string,
+  host?: string,
+  parentOrganization?: string,
 }

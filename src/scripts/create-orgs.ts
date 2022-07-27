@@ -2,9 +2,14 @@ import * as debugLib from 'debug';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { CreatedOrgResponse, createOrg, filterOutExistingOrgs } from '../lib';
-import { getLoggingPath } from './../lib';
-import { listIntegrations, setNotificationPreferences } from '../lib/api/org';
+import {
+  CreatedOrgResponse,
+  createOrg,
+  filterOutExistingOrgs,
+  getLoggingPath,
+  listIntegrations,
+  setNotificationPreferences,
+} from '../lib';
 import { requestsManager } from 'snyk-request-manager';
 import { CreateOrgData, Org } from '../lib/types';
 import { logCreatedOrg } from '../loggers/log-created-org';
@@ -14,11 +19,13 @@ import { logFailedOrg } from '../loggers/log-failed-org';
 import { streamData } from '../stream-data';
 
 const debug = debugLib('snyk:create-orgs-script');
+
 interface NewOrExistingOrg extends CreatedOrgResponse {
   integrations: {
     [name: string]: string;
   };
   orgId: string;
+  parentOrganization?: string;
   groupId: string;
   origName: string; // name requested to be created
   sourceOrgId?: string;
@@ -31,6 +38,7 @@ async function saveCreatedOrgData(
   await writeFile(fileName, ({ orgData } as unknown) as JSON);
   return fileName;
 }
+
 async function createNewOrgs(
   loggingPath: string,
   requestManager: requestsManager,
@@ -41,7 +49,7 @@ async function createNewOrgs(
   const created: NewOrExistingOrg[] = [];
 
   for (const orgData of orgsToCreate) {
-    const { name, sourceOrgId } = orgData;
+    const { name, sourceOrgId, parentOrganization } = orgData;
     try {
       debug(`Creating new "${name}" organization`);
       const org = await createOrg(requestManager, groupId, name, sourceOrgId);
@@ -58,6 +66,7 @@ async function createNewOrgs(
         groupId,
         origName: name,
         sourceOrgId,
+        parentOrganization,
       });
       await logCreatedOrg(groupId, name, org, integrations, loggingPath);
     } catch (e) {
@@ -245,7 +254,7 @@ async function separateExistingOrganizations(
         e.data
           ? e.data.message
           : e.message ||
-              'Failed to create org, please try again in DEBUG mode.',
+          'Failed to create org, please try again in DEBUG mode.',
       );
     }
     throw new Error(

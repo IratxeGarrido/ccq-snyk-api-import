@@ -1,13 +1,10 @@
 import * as debugLib from 'debug';
 import * as yargs from 'yargs';
-const debug = debugLib('snyk:orgs-data-script');
-
-import { getLoggingPath } from '../lib/get-logging-path';
+import { getLoggingPath } from '../lib';
 import { CommandResult, SupportedIntegrationTypesImportOrgData } from '../lib/types';
-import {
-  entityName,
-  generateOrgImportDataFile,
-} from '../scripts/generate-org-data';
+import { entityName, generateOrgImportDataFile } from '../scripts/generate-org-data';
+
+const debug = debugLib('snyk:orgs-data-script');
 
 export const command = ['orgs:data'];
 export const desc =
@@ -35,6 +32,10 @@ export const builder = {
     desc:
       'Skip any organizations that do not any targets. (e.g. Github Organization does not have any repos)',
   },
+  fromTeams: {
+    required: false,
+    desc: 'Generate organizations in Snyk using Teams instead of Organizations (Only for Github)',
+  },
   source: {
     required: true,
     default: SupportedIntegrationTypesImportOrgData.GITHUB,
@@ -49,36 +50,38 @@ export async function generateOrgImportData(
   groupId: string,
   sourceOrgPublicId?: string,
   sourceUrl?: string,
-  skipEmptyOrgs?: boolean): Promise<CommandResult>  {
+  fromTeams?: boolean,
+  skipEmptyOrgs?: boolean): Promise<CommandResult> {
 
-    try {
-      getLoggingPath();
-      
-      const res = await generateOrgImportDataFile(
-        source,
-        groupId,
-        sourceOrgPublicId,
-        sourceUrl,
-        skipEmptyOrgs,
-      );
-      const orgsMessage =
-        res.orgs.length > 0
-          ? `Found ${res.orgs.length} ${entityName[source]}(s). Written the data to file: ${res.fileName}`
-          : `⚠ No ${entityName[source]}(s) found!`;
-    
-      return {
-        fileName: res.fileName,
-        exitCode: 0,
-        message: orgsMessage,
-      };
+  try {
+    getLoggingPath();
 
-    } catch (e) {
-      const errorMessage = `ERROR! Failed to generate data. Try running with \`DEBUG=snyk* <command> for more info\`.\nERROR: ${e.message}`;
-      return {
-        fileName: undefined,
-        exitCode: 1,
-        message: errorMessage,
-      };
+    const res = await generateOrgImportDataFile(
+      source,
+      groupId,
+      sourceOrgPublicId,
+      sourceUrl,
+      fromTeams,
+      skipEmptyOrgs,
+    );
+    const orgsMessage =
+      res.orgs.length > 0
+        ? `Found ${res.orgs.length} ${entityName[source]}(s). Written the data to file: ${res.fileName}`
+        : `⚠ No ${entityName[source]}(s) found!`;
+
+    return {
+      fileName: res.fileName,
+      exitCode: 0,
+      message: orgsMessage,
+    };
+
+  } catch (e) {
+    const errorMessage = `ERROR! Failed to generate data. Try running with \`DEBUG=snyk* <command> for more info\`.\nERROR: ${e.message}`;
+    return {
+      fileName: undefined,
+      exitCode: 1,
+      message: errorMessage,
+    };
   }
 }
 
@@ -88,23 +91,25 @@ export async function handler(argv: {
   groupId: string;
   sourceOrgPublicId?: string;
   sourceUrl?: string;
+  fromTeams?: boolean;
   skipEmptyOrgs?: boolean;
 }): Promise<void> {
-  
-  const {
-      source,
-      sourceOrgPublicId,
-      groupId,
-      sourceUrl,
-      skipEmptyOrgs = false,
-    } = argv;
-    debug('ℹ️  Options: ' + JSON.stringify(argv));
 
-  const res = await generateOrgImportData(source,
-      groupId,
-      sourceOrgPublicId,
-      sourceUrl,
-      skipEmptyOrgs) 
+  const {
+    source,
+    sourceOrgPublicId,
+    groupId,
+    sourceUrl,
+    fromTeams,
+    skipEmptyOrgs = false,
+  } = argv;
+  debug('ℹ️  Options: ' + JSON.stringify(argv));
+
+  if (fromTeams && source !== SupportedIntegrationTypesImportOrgData.GITHUB && source !== SupportedIntegrationTypesImportOrgData.GHE) {
+    debug('Currently --fromTeams is only available for Github and Github Enterprise! Proceeding without it...');
+  }
+
+  const res = await generateOrgImportData(source, groupId, sourceOrgPublicId, sourceUrl, fromTeams, skipEmptyOrgs);
 
   if (res.exitCode === 1) {
     debug('Failed to create organizations.\n' + res.message);

@@ -1,38 +1,30 @@
 import * as _ from 'lodash';
 import * as debugLib from 'debug';
 
-import {
-  CreatedOrg,
-  ImportTarget,
-  SupportedIntegrationTypesImportData,
-} from '../lib/types';
+import { CreatedOrg, ImportTarget, SourceRepoOptions, SupportedIntegrationTypesImportData } from '../lib/types';
 import { writeFile } from '../write-file';
 import {
+  AzureRepoData,
+  BitbucketCloudRepoData,
+  BitbucketServerRepoData,
   GithubRepoData,
-  listGithubRepos,
-  listGitlabRepos,
   GitlabRepoData,
   listAzureRepos,
-  AzureRepoData,
-  listBitbucketServerRepos,
-  BitbucketServerRepoData,
   listBitbucketCloudRepos,
-  BitbucketCloudRepoData,
+  listBitbucketServerRepos,
+  listGithubRepos,
+  listGitlabRepos,
 } from '../lib';
 
 const debug = debugLib('snyk:generate-targets-data');
 
-async function githubEnterpriseRepos(
-  orgName: string,
-  sourceUrl?: string,
-): Promise<GithubRepoData[]> {
-  if (!sourceUrl) {
+async function githubEnterpriseRepos(options: SourceRepoOptions): Promise<GithubRepoData[]> {
+  if (!options.host) {
     console.warn(
       'No `sourceUrl` provided for Github Enterprise source, defaulting to https://api.github.com',
     );
   }
-  const ghRepos: GithubRepoData[] = await listGithubRepos(orgName, sourceUrl);
-  return ghRepos;
+  return await listGithubRepos(options);
 }
 
 const sourceGenerators = {
@@ -71,9 +63,9 @@ function validateRequiredOrgData(
   ) {
     throw new Error(
       'At least one supported integration is expected in `integrations` field.' +
-        `Supported integrations are: ${Object.values(
-          SupportedIntegrationTypesImportData,
-        ).join(',')}`,
+      `Supported integrations are: ${Object.values(
+        SupportedIntegrationTypesImportData,
+      ).join(',')}`,
     );
   }
 }
@@ -92,9 +84,11 @@ export async function generateTargetsImportDataFile(
     debug(`Processing ${name}`);
     try {
       validateRequiredOrgData(name, integrations, orgId);
-      const entities: Array<
-        GithubRepoData | GitlabRepoData | AzureRepoData | BitbucketServerRepoData | BitbucketCloudRepoData
-      > = await sourceGenerators[source](topLevelEntity.name, sourceUrl!);
+      const entities: Array<GithubRepoData | GitlabRepoData | AzureRepoData | BitbucketServerRepoData | BitbucketCloudRepoData> = await sourceGenerators[source]({
+        orgName: topLevelEntity.name,
+        host: sourceUrl,
+        parentOrganization: topLevelEntity.parentOrganization,
+      });
       entities.forEach((entity) => {
         targetsData.push({
           target: entity,

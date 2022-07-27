@@ -1,5 +1,8 @@
 export interface SnykOrgData {
   name: string;
+  parentOrganization?: {
+    name: string,
+  };
 }
 
 export interface GithubRepoData {
@@ -9,8 +12,13 @@ export interface GithubRepoData {
   name: string;
 }
 
+// Can be used for Organizations OR Teams!
 export interface GithubOrgData {
   name: string;
   id: number;
   url: string;
+  parentOrganization?: {
+    name: string,
+    id: number;
+  };
 }

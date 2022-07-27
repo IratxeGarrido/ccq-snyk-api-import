@@ -11,3 +11,8 @@ yarn.lock
 .eslintcache
 local.*
 test/research
+
+
+.env
+Logs/
+.idea

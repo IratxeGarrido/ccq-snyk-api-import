@@ -5,6 +5,7 @@ import { getToken } from './get-token';
 import { getBaseUrl } from './get-base-url';
 import * as types from '@gitbeaker/core/dist/types';
 import { GitlabRepoData } from './types';
+import { SourceRepoOptions } from '../../types';
 
 const debug = debugLib('snyk:list-repos-script');
 
@@ -19,7 +20,6 @@ export async function fetchGitlabReposForPage(
 }> {
   const repoData: GitlabRepoData[] = [];
   const params = {
-    // eslint-disable-next-line @typescript-eslint/camelcase
     perPage,
     page: pageNumber,
   };
@@ -79,14 +79,10 @@ async function fetchAllRepos(
   return repoData;
 }
 
-export async function listGitlabRepos(
-  groupName: string,
-  host?: string,
-): Promise<GitlabRepoData[]> {
+export async function listGitlabRepos({ orgName: groupName, host }: SourceRepoOptions): Promise<GitlabRepoData[]> {
   const token = getToken();
   const baseUrl = getBaseUrl(host);
   const client = new Gitlab({ host: baseUrl, token });
   debug(`Fetching all repos data for org \`${groupName}\` from ${baseUrl}`);
-  const repos = await fetchAllRepos(client, groupName);
-  return repos;
+  return await fetchAllRepos(client, groupName);
 }
