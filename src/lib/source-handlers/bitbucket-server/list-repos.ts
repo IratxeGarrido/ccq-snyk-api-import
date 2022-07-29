@@ -4,8 +4,10 @@ import { BitbucketServerRepoData } from './types';
 import { getBitbucketServerToken } from './get-bitbucket-server-token';
 import { limiterWithRateLimitRetries } from '../../request-with-rate-limit';
 import { limiterForScm } from '../../limiters';
+import { SourceRepoOptions } from '../../types';
 
 const debug = debugLib('snyk:bitbucket-server');
+
 interface BitbucketServeRepoData {
   values: {
     name: string;
@@ -16,6 +18,7 @@ interface BitbucketServeRepoData {
   isLastPage: boolean;
   nextPageStart: number;
 }
+
 export const fetchAllRepos = async (
   url: string,
   projectKey: string,
@@ -62,9 +65,7 @@ const getRepos = async (
   const repos: BitbucketServerRepoData[] = [];
   const headers: OutgoingHttpHeaders = { Authorization: `Bearer ${token}` };
   const limiter = await limiterForScm(1, 1000, 1000, 1000, 1000 * 3600);
-  const { body, statusCode } = await limiterWithRateLimitRetries<
-    BitbucketServeRepoData
-  >(
+  const { body, statusCode } = await limiterWithRateLimitRetries<BitbucketServeRepoData>(
     'get',
     `${url}/rest/api/1.0/repos?projectname=${projectKey}&state=AVAILABLE&start=${startFrom}&limit=${limit}`,
     headers,
@@ -84,10 +85,8 @@ const getRepos = async (
   return { repos, isLastPage, start };
 };
 
-export async function listBitbucketServerRepos(
-  projectName: string,
-  host: string,
-): Promise<BitbucketServerRepoData[]> {
+export async function listBitbucketServerRepos(options: SourceRepoOptions): Promise<BitbucketServerRepoData[]> {
+  const { orgName: projectName, host } = options;
   const bitbucketServerToken = getBitbucketServerToken();
   if (!host) {
     throw new Error(
@@ -95,6 +94,5 @@ export async function listBitbucketServerRepos(
     );
   }
   debug(`Fetching all repos data for org: ${projectName}`);
-  const repoList = await fetchAllRepos(host, projectName, bitbucketServerToken);
-  return repoList;
+  return await fetchAllRepos(host, projectName, bitbucketServerToken);
 }

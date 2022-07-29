@@ -5,6 +5,7 @@ import * as types from '@gitbeaker/core';
 import { getToken } from './get-token';
 import { getBaseUrl } from './get-base-url';
 import { GitlabGroupData } from './types';
+import { SourceGeneratorOptions } from '../../types';
 
 const debug = debugLib('snyk:github');
 
@@ -27,7 +28,7 @@ async function fetchOrgsForPage(
     hasNextPage = true;
 
     orgsData.push(
-      ...orgs.map((org: any) => ({
+      ...orgs.map((org) => ({
         name: org.full_path,
         id: org.id,
         url: org.web_url,
@@ -59,13 +60,10 @@ async function fetchAllOrgs(
   return orgsData;
 }
 
-export async function listGitlabGroups(
-  host?: string,
-): Promise<GitlabGroupData[]> {
+export async function listGitlabGroups({ sourceUrl: host }: SourceGeneratorOptions): Promise<GitlabGroupData[]> {
   const token = getToken();
   const baseUrl = getBaseUrl(host);
   const client = new Gitlab({ host: baseUrl, token });
   debug(`Fetching all Gitlab groups data from ${baseUrl}`);
-  const orgs = await fetchAllOrgs(client);
-  return orgs;
+  return await fetchAllOrgs(client);
 }

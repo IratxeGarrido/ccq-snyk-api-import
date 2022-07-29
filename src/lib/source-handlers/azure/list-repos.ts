@@ -7,6 +7,7 @@ import { listAzureProjects } from './list-projects';
 import { getBaseUrl } from './get-base-url';
 import { limiterWithRateLimitRetries } from '../../request-with-rate-limit';
 import { limiterForScm } from '../../limiters';
+import { SourceRepoOptions } from '../../types';
 
 const debug = debugLib('snyk:azure');
 
@@ -17,6 +18,7 @@ interface AzureReposResponse {
     defaultBranch: string;
   }[];
 }
+
 export async function fetchAllRepos(
   url: string,
   orgName: string,
@@ -44,13 +46,10 @@ async function getRepos(
     Authorization: `Basic ${base64.encode(':' + token)}`,
   };
   const limiter = await limiterForScm(1, 500);
-  const { body, statusCode } = await limiterWithRateLimitRetries<
-    AzureReposResponse
-  >(
+  const fullUrl = `${url}/${orgName}/${encodeURIComponent(project)}/_apis/git/repositories?api-version=4.1`;
+  const { body, statusCode } = await limiterWithRateLimitRetries<AzureReposResponse>(
     'get',
-    `${url}/${orgName}/` +
-      encodeURIComponent(project) +
-      '/_apis/git/repositories?api-version=4.1',
+    fullUrl,
     headers,
     limiter,
     60000,
@@ -76,10 +75,7 @@ async function getRepos(
   return repoList;
 }
 
-export async function listAzureRepos(
-  orgName: string,
-  host?: string,
-): Promise<AzureRepoData[]> {
+export async function listAzureRepos({ orgName, host }: SourceRepoOptions): Promise<AzureRepoData[]> {
   const azureToken = getAzureToken();
   const baseUrl = getBaseUrl(host);
   const repoList: AzureRepoData[] = [];

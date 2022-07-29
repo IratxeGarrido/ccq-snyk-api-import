@@ -1,26 +1,17 @@
 import * as pMap from 'p-map';
 import {
+  bitbucketCloudWorkspaceIsEmpty,
+  bitbucketServerProjectIsEmpty,
   githubEnterpriseOrganizations,
   githubOrganizationIsEmpty,
   githubOrganizations,
-  SnykOrgData,
-} from '../lib/source-handlers/github';
-import {
-  listGitlabGroups,
   gitlabGroupIsEmpty,
-} from '../lib/source-handlers/gitlab';
-import {
-  bitbucketCloudWorkspaceIsEmpty,
   listBitbucketCloudWorkspaces,
-} from '../lib/source-handlers/bitbucket-cloud/';
-import {
-  bitbucketServerProjectIsEmpty,
   listBitbucketServerProjects,
-} from '../lib/source-handlers/bitbucket-server/';
-import {
-  CreateOrgData,
-  SupportedIntegrationTypesImportOrgData,
-} from '../lib/types';
+  listGitlabGroups,
+  SnykOrgData,
+} from '../lib';
+import { CreateOrgData, SupportedIntegrationTypesImportOrgData } from '../lib/types';
 import { writeFile } from '../write-file';
 
 const sourceGenerators = {
@@ -36,7 +27,7 @@ const sourceNotEmpty = {
   [SupportedIntegrationTypesImportOrgData.GHE]: githubOrganizationIsEmpty,
   [SupportedIntegrationTypesImportOrgData.GITLAB]: gitlabGroupIsEmpty,
   [SupportedIntegrationTypesImportOrgData.BITBUCKET_SERVER]: bitbucketServerProjectIsEmpty,
-  [SupportedIntegrationTypesImportOrgData.BITBUCKET_CLOUD]: bitbucketCloudWorkspaceIsEmpty
+  [SupportedIntegrationTypesImportOrgData.BITBUCKET_CLOUD]: bitbucketCloudWorkspaceIsEmpty,
 };
 
 export const entityName: {
@@ -64,6 +55,7 @@ export async function generateOrgImportDataFile(
   groupId: string,
   sourceOrgId?: string,
   sourceUrl?: string,
+  fromTeams = false,
   skipEmptyOrgs = false,
 ): Promise<{
   orgs: CreateOrgData[];
@@ -72,7 +64,7 @@ export async function generateOrgImportDataFile(
 }> {
   const orgData: CreateOrgData[] = [];
   const skippedEmptyOrgs: SnykOrgData[] = [];
-  const topLevelEntities = await sourceGenerators[source](sourceUrl);
+  const topLevelEntities: SnykOrgData[] = await sourceGenerators[source]({ sourceUrl, fromTeams });
 
   await pMap(
     topLevelEntities,
@@ -88,6 +80,7 @@ export async function generateOrgImportDataFile(
         const data: CreateOrgData = {
           name: org.name,
           groupId,
+          parentOrganization: org.parentOrganization?.name,
         };
         if (sourceOrgId) {
           data.sourceOrgId = sourceOrgId;

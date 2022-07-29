@@ -1,11 +1,12 @@
 import * as debugLib from 'debug';
-import base64 = require('base-64');
 import { OutgoingHttpHeaders } from 'http2';
 import { BitbucketCloudRepoData } from './types';
 import { getBitbucketCloudUsername } from './get-bitbucket-cloud-username';
 import { getBitbucketCloudPassword } from './get-bitbucket-cloud-password';
 import { limiterForScm } from '../../limiters';
 import { limiterWithRateLimitRetries } from '../../request-with-rate-limit';
+import { SourceRepoOptions } from '../../types';
+import base64 = require('base-64');
 
 const debug = debugLib('snyk:bitbucket-cloud');
 
@@ -68,12 +69,10 @@ const getRepos = async (
     Authorization: `Basic ${base64.encode(username + ':' + password)}`,
   };
   const limiter = await limiterForScm(1, 1000, 1000, 1000, 1000 * 3600);
-  const { statusCode, body } = await limiterWithRateLimitRetries<
-    BitbucketReposResponse
-  >(
+  const { statusCode, body } = await limiterWithRateLimitRetries<BitbucketReposResponse>(
     'get',
     nextPageLink ??
-      `https://bitbucket.org/api/2.0/repositories/${workspace}?pagelen=100`,
+    `https://bitbucket.org/api/2.0/repositories/${workspace}?pagelen=100`,
     headers,
     limiter,
     60000,
@@ -100,16 +99,13 @@ const getRepos = async (
   return { repos, next };
 };
 
-export async function listBitbucketCloudRepos(
-  workspace: string,
-): Promise<BitbucketCloudRepoData[]> {
+export async function listBitbucketCloudRepos({ orgName: workspace }: SourceRepoOptions): Promise<BitbucketCloudRepoData[]> {
   const bitbucketCloudUsername = getBitbucketCloudUsername();
   const bitbucketCloudPassword = getBitbucketCloudPassword();
   debug(`Fetching all repos data for org: ${workspace}`);
-  const repoList = await fetchAllBitbucketCloudRepos(
+  return await fetchAllBitbucketCloudRepos(
     workspace,
     bitbucketCloudUsername,
     bitbucketCloudPassword,
   );
-  return repoList;
 }

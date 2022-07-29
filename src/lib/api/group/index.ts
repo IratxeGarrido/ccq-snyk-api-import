@@ -47,8 +47,7 @@ export async function createOrg(
   const statusCode = res.statusCode || res.status;
   if (!statusCode || statusCode !== 201) {
     throw new Error(
-      'Expected a 201 response, instead received: ' +
-        JSON.stringify({ data: res.data, status: statusCode }),
+      'Expected a 201 response, instead received: ' + JSON.stringify({ data: res.data, status: statusCode }),
     );
   }
   return res.data;
@@ -83,12 +82,12 @@ export async function listOrgs(
   if (!statusCode || statusCode !== 200) {
     throw new Error(
       'Expected a 200 response, instead received: ' +
-        JSON.stringify({ statusCode, data: res.data }),
+      JSON.stringify({ statusCode, data: res.data }),
     );
   }
 
   const data: ListOrgsResponse = res.data;
-  const orgs = data.orgs.map((org) => ({
+  return data.orgs.map((org) => ({
     ...org,
     group: {
       name: res.data.name,
@@ -96,7 +95,6 @@ export async function listOrgs(
       id: res.data.id,
     },
   }));
-  return orgs;
 }
 
 export async function listOrgsPerPage(
@@ -114,6 +112,7 @@ export async function listOrgsPerPage(
     page: pageNumber,
   };
   const orgs = await listOrgs(requestManager, groupId, params);
+
   let hasNextPage;
   if (orgs.length) {
     hasNextPage = true;

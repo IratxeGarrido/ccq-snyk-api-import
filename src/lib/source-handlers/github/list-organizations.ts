@@ -5,11 +5,13 @@ import * as debugLib from 'debug';
 import { getGithubBaseUrl } from './github-base-url';
 import { GithubOrgData, SnykOrgData } from './types';
 import { getGithubToken } from './get-github-token';
+import { SourceGeneratorOptions } from '../../types';
 
 const debug = debugLib('snyk:github');
 
 async function fetchOrgsForPage(
   octokit: Octokit,
+  options: SourceGeneratorOptions,
   pageNumber = 1,
   since = 0,
   isGithubEnterprise = false,
@@ -30,15 +32,37 @@ async function fetchOrgsForPage(
     : await octokit.orgs.listForAuthenticatedUser(params);
   const links = parseLinkHeader(res.headers.link as string) || {};
   const orgs = res && res.data;
+
   if (orgs.length) {
-    orgsData.push(
-      ...orgs.map((org) => ({
-        name: org.login,
-        id: org.id,
-        url: org.url,
-      })),
-    );
+    if (options.fromTeams) {
+      // Iterate through orgs and fetch ALL teams! Might be worth it to add an option to import just one organisation.
+      for (const org of orgs) {
+        const teamsRes = await octokit.teams.list({ ...params, org: org.login });
+        const teams = teamsRes && teamsRes.data;
+        if (teams.length) {
+          orgsData.push(
+            ...teams.map(team => ({
+              name: team.slug,
+              id: team.id,
+              parentOrganization: {
+                name: org.login,
+                id: org.id,
+              },
+              url: team.url,
+            })));
+        }
+      }
+    } else {
+      orgsData.push(
+        ...orgs.map((org) => ({
+          name: org.login,
+          id: org.id,
+          url: org.url,
+        })),
+      );
+    }
   }
+
   return {
     orgs: orgsData,
     hasNextPage: !!links.next,
@@ -50,6 +74,7 @@ async function fetchAllOrgs(
   octokit: Octokit,
   page = 0,
   isGithubEnterprise = false,
+  options: SourceGeneratorOptions,
 ): Promise<GithubOrgData[]> {
   const orgsData: GithubOrgData[] = [];
   let currentPage = page;
@@ -60,6 +85,7 @@ async function fetchAllOrgs(
     debug(`Fetching page ${currentPage}`);
     const { orgs, hasNextPage, since } = await fetchOrgsForPage(
       octokit,
+      options,
       currentPage,
       currentSince,
       isGithubEnterprise,
@@ -73,28 +99,24 @@ async function fetchAllOrgs(
   return orgsData;
 }
 
-export async function listGithubOrgs(host?: string): Promise<GithubOrgData[]> {
+export async function listGithubOrgs(options: SourceGeneratorOptions): Promise<GithubOrgData[]> {
+  const { sourceUrl: host, ...restOpts } = options;
   const githubToken = getGithubToken();
   const baseUrl = getGithubBaseUrl(host);
   const octokit: Octokit = new Octokit({ baseUrl, auth: githubToken });
   debug('Fetching all Github organizations data');
-  const orgs = await fetchAllOrgs(octokit, undefined, !!host);
-  return orgs;
+  return await fetchAllOrgs(octokit, undefined, !!host, restOpts);
 }
 
-export async function githubEnterpriseOrganizations(
-  sourceUrl?: string,
-): Promise<SnykOrgData[]> {
-  if (!sourceUrl) {
-   console.warn(
+export async function githubEnterpriseOrganizations(options: SourceGeneratorOptions): Promise<SnykOrgData[]> {
+  if (!options.sourceUrl) {
+    console.warn(
       'No `sourceUrl` provided for Github Enterprise source, defaulting to https://api.github.com',
     );
   }
-  const ghOrgs: GithubOrgData[] = await listGithubOrgs(sourceUrl);
-  return ghOrgs;
+  return await listGithubOrgs(options);
 }
 
-export async function githubOrganizations(): Promise<SnykOrgData[]> {
-  const ghOrgs: GithubOrgData[] = await listGithubOrgs();
-  return ghOrgs;
+export async function githubOrganizations(options: SourceGeneratorOptions): Promise<SnykOrgData[]> {
+  return await listGithubOrgs(options);
 }
