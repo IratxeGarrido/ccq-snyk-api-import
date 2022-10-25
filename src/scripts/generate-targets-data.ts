@@ -96,7 +96,7 @@ export async function generateTargetsImportDataFile(
           orgId,
         });
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error(
         `Failed to generate import data for org: ${name} (${orgId}). Error: ${e.message}`,
       );

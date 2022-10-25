@@ -35,23 +35,28 @@ export async function fetchReposForPage(
     };
     res = await octokit.repos.listForOrg(params);
   }
+  
   const repos = res && res.data;
   let hasNextPage;
   if (repos.length) {
+
     hasNextPage = true;
     repoData.push(
       ...repos
         .filter((repo) => !repo.archived)
+        .filter(repo => !repo.topics || !repo.topics.includes('no-snyk')) 
         .map((repo) => ({
           fork: repo.fork,
           name: repo.name,
           owner: repo.owner?.login,
           branch: repo.default_branch,
+          topics: repo.topics,
         })),
     );
   } else {
     hasNextPage = false;
   }
+
   return { repos: repoData, hasNextPage };
 }
 
@@ -80,7 +85,7 @@ async function fetchAllRepos(
       currentPage = currentPage + 1;
       hasMorePages = hasNextPage;
       repoData.push(...repos);
-    } catch (e) {
+    } catch (e: any) {
       debug(`Failed to fetch page: ${currentPage}`, e);
       if ([403, 500, 502].includes(e.status) && retries < MAX_RETRIES) {
         const sleepTime = 120000 * retries; // 2 mins x retry attempt

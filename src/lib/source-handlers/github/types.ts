@@ -10,6 +10,7 @@ export interface GithubRepoData {
   branch?: string;
   owner?: string;
   name: string;
+  topics?: string[];
 }
 
 // Can be used for Organizations OR Teams!
