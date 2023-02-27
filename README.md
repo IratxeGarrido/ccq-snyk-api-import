@@ -6,6 +6,21 @@
 
 Snyk helps you find, fix and monitor for known vulnerabilities in your dependencies, both on an ad hoc basis and as part of your CI (Build) system.
 
+# How to run the script for Axel Springer
+Clone the repo locally.
+
+Set up the variables:
+- `export SNYK_LOG_PATH='your-logs-path'`
+- `export SNYK_TOKEN=****` - you can get this token by running `snyk auth` and then `snyk config get api` in your terminal.
+- `export GITHUB_TOKEN=ghp_****` - you have to create a personal access token that gives Snyk access to all repos.
+
+Usage:
+The variable `<as-groupID>` you can find in the Snyk account
+- `DEBUG=snyk* npm run orgs:data -- --groupId <as-groupID>` - Creates a list of orgs (AS Teams) based on GitHub teams and the orgs that are already in Snyk. 
+- `DEBUG=snyk* npm run orgs:create -- --file group-****-github-com-orgs.json --groupId <as-groupID>` - Creates the Orgs in Snyk based on data file generated with `orgs:data` command.
+- `DEBUG=snyk* npm run import:data -- --file snyk-created-orgs.json --groupId <as-groupID>` - creates a file with all the repos that need to be imported to Snyk
+- `DEBUG=snyk* npm run import` - imports the repos to Snyk
+
 # snyk-api-import
 Snyk API project importer. This script is intended to help import projects into Snyk with a controlled pace utilizing available [Snyk APIs](https://snyk.docs.apiary.io/).
 
